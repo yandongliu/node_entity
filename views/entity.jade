@@ -1,0 +1,67 @@
+extends layout
+
+block content
+    a(href="/") Home
+    =" "
+    a(href="/entity/edit/#{entity.id}") Edit
+    h1= title
+    each path in paths
+      each e,i in path
+        a(href="/entity/show/#{e}") #{e}
+        if i!=path.length-1
+          | =&gt; 
+      br
+    p Welcome to our test
+
+    // Wrapper
+    #wrapper 
+
+        h2 Name
+        ul
+          li #{entity.name}
+        p
+        h2 Belongs to
+        ul
+          each u in parententities
+            li
+              a(href="/entity/show/"+u.id) #{u.name}
+        p
+        h2 Has following entities
+        ul
+          each u in subentities
+            li
+              a(href="/entity/show/"+u.id) #{u.name}
+
+        p
+        h2 Example list
+        ul
+          each u in instances
+            each en in subentities
+              |#{en.name}:
+              |#{u[en.id]}
+              =" "
+            li=u.name
+        p
+        h2 Instances
+        if instances.length>0
+          table
+            thead
+              th name
+              each u in subentities
+                th #{u.name}
+            tbody
+              each u in instances
+                tr
+                  td
+                    =u.name
+                  each e in subentities
+                    td #{u[e.id]}
+        #entity_edit___div_create_instance
+          fieldset
+            input#name(type='text', placeholder='Name')
+            each u in entity.children
+              input(id="#{u.id}", type="text", placeholder="#{u.name}")
+            #entity_edit___div_subentities
+        button#entity_edit___btn_create_instance(e_id="#{entity.id}", e_name="#{entity.name}") Create Instance
+      script(type="text/javascript").
+        var subentities=!{json_subentities};

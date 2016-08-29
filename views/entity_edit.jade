@@ -1,0 +1,82 @@
+extends layout
+
+block content
+    a(href="/") Home
+    =" "
+    a(href="/entity/show/#{entity.id}") #{entity.name}
+    h1= title
+    hr
+
+    #wrapper 
+
+      if entity.id!=='root'
+        h2 Name
+          ul
+            li
+              input(type="text", value=entity.name)
+        h2 Belongs to
+        ul
+          li
+            a(href=entity.p_id)=entity.p_name
+            =" "
+            a(href="#" class="linkdeleteparententity" eid=entity.p_id) #del
+
+        #entity_edit___div_add_parententity
+          select#entity_edit___select_parent_entity
+            each e in allentities
+              option(id=e.id name=e.name pid = entity.id pname=entity.name) #{e.name}
+          button#entity_edit___btn_add_entity(eid=entity.id) add parent entity
+
+      p
+
+      h2 Subentities
+      ul#entity_edit___ul_subentity_list
+        each u in subentities
+          li
+            a(href=u.id)=u.name
+            | 
+            a(href="#" class="linkdelete" p_id=entity.id p_name=entity.name sube_id=u.id sube_name=u.name) #del
+        
+      #entity_edit___div_add_subentity
+        select#entity_edit___select_entity
+          each e in allentities
+            option(id=e.id name=e.name pid=entity.id pname=entity.name) #{e.name}
+        button#entity_edit___btn_add_subentity(eid=entity.id) add subentity relation
+        
+      br
+      #entity_edit___div_create_subentity
+        #entity_edit___select_entity
+          fieldset
+            input#name(type='text', placeholder='Entity name')
+            button#entity_edit___btn_create_entity(eid=entity.id, ename=entity.name) create subentity 
+      p
+
+      h2 Instances
+        ul
+          each u in instances
+            li
+              =u.name
+              =" "
+              a(href="#" class="linkdelete" _id=u._id id=u.id e_id=u.entity_id) #del
+
+
+      h2 Instances
+      #entity_edit___div_instancelist
+        table
+          thead
+            each u in subentities
+              th #{u.name}
+            th DELETE
+          tbody
+            each u in instances
+              tr
+                td
+                  =u.name
+                each e in subentities
+                  td #{u[e.id]}
+                td
+                  a(href="#" class="linkdelete" _id=u._id id=u.id e_id=u.entity_id) del
+
+      button cancel
+      button save
+

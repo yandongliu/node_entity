@@ -1,0 +1,96 @@
+extends layout
+
+block content
+    h1= title
+    p Welcome to our test
+
+    // Wrapper
+    #wrapper
+
+        // USER INFO
+        #userInfo
+            h2 User Info
+            p
+                strong Name:
+                |  <span id='userInfoName'></span>
+                br
+                strong Age:
+                |  <span id='userInfoAge'></span>
+                br
+                strong Gender:
+                |  <span id='userInfoGender'></span>
+                br
+                strong Location:
+                |  <span id='userInfoLocation'></span>
+        // /USER INFO
+
+        h2 Search
+          | 
+          input(type="text", style="width:500px")
+          | 
+          button Search
+        h2 Recent changes
+        ul
+          li ABCD
+
+        h2 Entity List
+        #index_div_entitylist
+          ul
+            each u in entities
+              li
+                a(href='/entity/show/#{u.id}') #{u.name}
+                &nbsp;||DEBUG:
+                |id:#{u.id}
+                ||parent:
+                a(href='/entity/show/#{u.p_id}') #{u.p_name}
+                &nbsp;|
+                span pid:#{u.p_id}
+                &nbsp;
+                a(href='#',class='linkdelete',rel='#{u._id}') #del
+                &nbsp;
+                span lastedit:#{u.mtime}
+                &nbsp;
+                a(href='/entity/edit/#{u.id}') #edit
+
+        h2 Instance List
+        #index_div_instancelist
+          ul
+            each u in instances
+              li
+                span #{u.name}
+                &nbsp;
+                |(
+                a(href='/entity/show/#{u.entity_id}') #{u.entity_name}
+                |) 
+                span lastedit:#{u.mtime}
+                &nbsp;
+                a(href='#',class='linkdelete',rel='#{u._id}') #del
+
+        h2 Create entity
+        #index_div_create_entity
+          fieldset
+            | auto suggest to prevent dups
+            br
+            input#name(type='text', placeholder='Name') 
+            | parent 
+            select#index_select_create_entity
+                each ent in entities
+                    option(id=ent.id name=ent.name) #{ent.name}
+            br
+            button#index_btn_create_entity Create Entity
+
+        p
+        h2 Create instance
+        #index_div_create_instance
+          fieldset
+            input#name(type='text', placeholder='Name')
+            | of entity
+            select#index_select_create_instance
+                each ent in entities
+                    option(id=ent.id name=ent.name) #{ent.name}
+            br
+            #index_div_subentities
+            button#index_btn_create_instance Create Instance
+
+
+    // /WRAPPER
